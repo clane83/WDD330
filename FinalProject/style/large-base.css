@@ -1,0 +1,29 @@
+@media screen and (min-width: 600px) {
+
+    #recipe-container,
+    #favorites {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    #search-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+   
+
+
+}
+
+@media screen and (min-width: 1000px) {
+
+    #recipe-container,
+    #favorites {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+}

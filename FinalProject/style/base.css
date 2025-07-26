@@ -1,0 +1,116 @@
+html,
+body,
+header {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Winky Rough", sans-serif;
+    background-color: #D7F9F1;
+}
+
+main {
+    padding: 2em;
+}
+
+.nav:hover {
+    background-color: #ff9914;
+}
+
+input,
+button {
+    padding: 10px;
+    font-size: 1rem;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+#ingredients,
+#exclude,
+#cuisine,
+#newsletter-email {
+    width: 60%;
+    max-width: 500px;
+
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+#recipe-container,
+#favorites {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem;
+}
+
+.recipe-card {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.recipe-card img {
+    max-width: 100%;
+    border-radius: 8px;
+    /* margin-left: 1rem;
+    margin-right: 1rem; */
+}
+
+.favorite-btn {
+    font-size: 1.1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: goldenrod;
+    margin-top: 10px;
+}
+
+.remove-btn {
+    width: 50px;
+}
+
+.recipe-card a {
+    align-self: center;
+    padding-top: 1rem;
+    padding-bottom: .5rem;
+}
+
+.recipe-card h2 {
+    align-self: center;
+}
+
+.hero {
+    width: 100vw;
+    height: auto;
+    display: block;
+    margin: 0;
+    padding: 0;
+    object-fit: cover;
+}
+
+
+
+}
+
+#search-container {
+    display: grid;
+    grid-template-columns: 1fr;
+}

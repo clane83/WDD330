@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Recipe Finder</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="style/base.css" />
+    <link rel="stylesheet" href="style/large-base.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <img class="hero" src="images/hero.jpg" alt="cooking at home">
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="favorites.html">View Saved Recipes</a>
+        </nav>
+
+    </header>
+    <main>
+        <h1>🥕 Recipe Finder</h1>
+        <section id="search-container">
+            <section id="search-criteria">
+                <div class="ingredient-list">
+                    <p>Enter your ingredients (comma-separated):</p>
+                    <input type="text" id="ingredients" placeholder="e.g. eggs, cheese, spinach" />
+                    <p>Exclude ingredients (optional):</p>
+                    <input type="text" id="exclude" placeholder="e.g. mushrooms, tuna" />
+                    <p>Cooking style (optional):</p>
+                    <input type="text" id="cuisine" placeholder="e.g. Italian, Thai, BBQ" />
+                </div>
+                <div class="Search-buttons">
+                    <button id="search">Search</button>
+                    <button id="refresh" disabled>Refresh</button>
+                </div>
+            </section>
+            <section id="facts">
+                <div>
+                    <h2>Fun Food Facts</h2>
+                    <p id="fun-fact"></p>
+                </div>
+            </section>
+        </section>
+        <div id="recipe-container"></div>
+        <section class="newsletter">
+            <h2>Newsletter</h2>
+            <p>
+                Sign up for our newsletter to receive staff picks and other special messages.
+            </p>
+            <form id='newsletter-form'>
+                <input type='email' id='newsletter-email' placeholder='Enter your email' required />
+                <button type='submit'>Subscribe</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="script/base.js" defer></script>
+</body>
+
+</html>
