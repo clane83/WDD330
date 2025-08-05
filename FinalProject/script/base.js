@@ -8,83 +8,90 @@ async function fetchFoodFact() {
     document.getElementById("fun-fact").innerText = data.text;
 }
 
-document.getElementById('search').addEventListener('click', async () => {
-    const ingredients = document.getElementById('ingredients').value.trim();
-    const excludeInput = document.getElementById('exclude').value.trim().toLowerCase();
-    const excludeList = excludeInput.split(',').map(item => item.trim()).filter(Boolean);
 
-    if (!ingredients) return;
+const searchButton = document.getElementById('search');
+if (searchButton) {
+    searchButton.addEventListener('click', async () => {
 
-    const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodeURIComponent(ingredients)}&number=10&ranking=1&apiKey=${apiKey}`;
+        const ingredients = document.getElementById('ingredients').value.trim();
+        const excludeInput = document.getElementById('exclude').value.trim().toLowerCase();
+        const excludeList = excludeInput.split(',').map(item => item.trim()).filter(Boolean);
 
-    try {
-        const res = await fetch(url);
-        let data = await res.json();
-        console.log("API response:", data);
+        if (!ingredients) return;
 
-        // Filter out recipes with any excluded ingredients, exclude drinks and must include at least 2 of the ingredients
-        if (excludeList.length > 0) {
-            data = data.filter(recipe => {
-                const usesEnoughIngredients = recipe.usedIngredientCount >= 2;
-                const isNotDrink = !recipe.title.toLowerCase().includes("drink") &&
-                    !recipe.title.toLowerCase().includes("smoothie") &&
-                    !recipe.title.toLowerCase().includes("cocktail") &&
-                    !recipe.title.toLowerCase().includes("mojito") &&
-                    !recipe.title.toLowerCase().includes("shake");
-                return usesEnoughIngredients && isNotDrink;
-            });
-        }
+        const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodeURIComponent(ingredients)}&number=10&ranking=1&apiKey=${apiKey}`;
 
-        //cuisine cooking style filter
-        const cuisineInput = document.getElementById('cuisine').value.trim().toLowerCase();
+        try {
+            const res = await fetch(url);
+            let data = await res.json();
+            console.log("API response:", data);
 
-        if (cuisineInput) {
-            const filteredData = [];
-
-            for (let recipe of data) {
-                // Get more details about the recipe to check its cuisine type
-                const detailsUrl = `https://api.spoonacular.com/recipes/${recipe.id}/information?includeNutrition=false&apiKey=${apiKey}`;
-                const res = await fetch(detailsUrl);
-                const info = await res.json();
-
-                const cuisines = (info.cuisines || []).map(c => c.toLowerCase());
-                if (cuisines.includes(cuisineInput)) {
-                    filteredData.push(recipe);
-                }
-
-                // Early stop if we already have a good list
-                if (filteredData.length >= 10) break;
+            // Filter out recipes with any excluded ingredients, exclude drinks and must include at least 2 of the ingredients
+            if (excludeList.length > 0) {
+                data = data.filter(recipe => {
+                    const usesEnoughIngredients = recipe.usedIngredientCount >= 2;
+                    const isNotDrink = !recipe.title.toLowerCase().includes("drink") &&
+                        !recipe.title.toLowerCase().includes("smoothie") &&
+                        !recipe.title.toLowerCase().includes("cocktail") &&
+                        !recipe.title.toLowerCase().includes("mojito") &&
+                        !recipe.title.toLowerCase().includes("shake");
+                    return usesEnoughIngredients && isNotDrink;
+                });
             }
 
-            data = filteredData;
+            //cuisine cooking style filter
+            const cuisineInput = document.getElementById('cuisine').value.trim().toLowerCase();
+
+            if (cuisineInput) {
+                const filteredData = [];
+
+                for (let recipe of data) {
+                    // Get more details about the recipe to check its cuisine type
+                    const detailsUrl = `https://api.spoonacular.com/recipes/${recipe.id}/information?includeNutrition=false&apiKey=${apiKey}`;
+                    const res = await fetch(detailsUrl);
+                    const info = await res.json();
+
+                    const cuisines = (info.cuisines || []).map(c => c.toLowerCase());
+                    if (cuisines.includes(cuisineInput)) {
+                        filteredData.push(recipe);
+                    }
+
+                    // Early stop if we already have a good list
+                    if (filteredData.length >= 10) break;
+                }
+
+                data = filteredData;
+            }
+
+
+            if (data.length === 0) {
+                document.getElementById('recipe-container').innerHTML = "<p>No recipes found after exclusions.</p>";
+                return;
+            }
+
+            lastResults = data;
+            showRecipes(pickRecipes(data));
+            document.getElementById('refresh').disabled = false;
+            fetchFoodFact(); //call useless facts
+
+
+        } catch (error) {
+            console.error("Fetch error:", error);
+            document.getElementById('recipe-container').innerHTML = `<p>Error loading recipes: ${error.message}</p>`;
         }
+    });
+}
 
 
-        if (data.length === 0) {
-            document.getElementById('recipe-container').innerHTML = "<p>No recipes found after exclusions.</p>";
-            return;
-        }
+const refreshButton = document.getElementById('refresh');
+if (refreshButton) {
+    refreshButton.addEventListener('click', () => {
+        if (lastResults.length === 0) return;
 
-        lastResults = data;
-        showRecipes(pickRecipes(data));
-        document.getElementById('refresh').disabled = false;
-        fetchFoodFact(); //call useless facts
-
-
-    } catch (error) {
-        console.error("Fetch error:", error);
-        document.getElementById('recipe-container').innerHTML = `<p>Error loading recipes: ${error.message}</p>`;
-    }
-});
-
-
-
-document.getElementById('refresh').addEventListener('click', () => {
-    if (lastResults.length === 0) return;
-
-    const newSet = pickRecipes(lastResults);
-    showRecipes(newSet);
-});
+        const newSet = pickRecipes(lastResults);
+        showRecipes(newSet);
+    });
+}
 
 function pickRecipes(allRecipes) {
     // Randomly shuffle recipes
@@ -188,7 +195,7 @@ if (newsletterForm) {
 
         if (email !== '') {
             localStorage.setItem('newsletterEmail', email);
-            window.location.href = '../thankyou.html';
+            window.location.href = 'thankyou.html';
         } else {
             alert('Please enter a valid email address.');
         }
@@ -198,17 +205,19 @@ if (newsletterForm) {
 
 }
 
-//Display form data on thankyou.html page
-const thankYouEmail = document.getElementById('thank-you-email');
-if (thankYouEmail) {
-    const emailInput = localStorage.getItem('newsletterEmail');
-
-    if (emailInput) {
-        thankYouEmail.innerHTML = `
-            <h2>Thank You!</h2>
-            <p>Your email has been successfully submitted.</p>
-            <p>We appreciate your interest in our products and will keep you updated with the latest news and offers.</p>
-            <p>Your email: ${emailInput}</p>
-        `;
+document.addEventListener('DOMContentLoaded', () => {
+    const thankYouEmail = document.getElementById('thank-you-email');
+    console.log("thankYouEmail element:", thankYouEmail); // Debug log
+    if (thankYouEmail) {
+        const emailInput = localStorage.getItem('newsletterEmail');
+        console.log("newsletterEmail value:", emailInput); // Debug log
+        if (emailInput) {
+            thankYouEmail.innerHTML = `
+                <h2>Thank You!</h2>
+                <p>Your email has been successfully submitted.</p>
+                <p>We will periodically send you emails about new recipes and staff picks</p>
+                <p>Your email: ${emailInput}</p>
+            `;
+        }
     }
-}
+});
