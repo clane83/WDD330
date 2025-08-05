@@ -1,3 +1,6 @@
+import { hamburger } from "./menu.js";
+
+
 const container = document.getElementById('favorites');
 
 function loadFavorites() {
@@ -37,6 +40,16 @@ function removeFavorite(id) {
     localStorage.setItem("favoriteRecipes", JSON.stringify(favorites));
     loadFavorites(); // Refresh UI
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    ///////////////////////////////// Hamburger Menu /////////////////////////////  
+    hamburger({
+        buttonSelector: "#menu",
+        navSelector: ".navigation"
+    });
+});
+
 
 // Initial load
 loadFavorites();

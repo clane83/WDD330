@@ -16,15 +16,24 @@
 
 <body>
     <header>
-        <img class="hero" src="images/hero.jpg" alt="cooking at home">
-        <nav class="nav">
-            <a href="index.html">Home</a>
-            <a href="favorites.html">View Saved Recipes</a>
-        </nav>
+        <div id="header-container">
 
+            <div id="header-text">
+                <h1>🥕 Recipe Finder</h1>
+            </div>
+
+            <button id="menu"></button>
+
+            <nav class="navigation">
+                <a href="index.html">Home</a>
+                <a href="favorites.html">View Saved Recipes</a>
+            </nav>
+        </div>
     </header>
     <main>
-        <h1>🥕 Recipe Finder</h1>
+        <div class="hero">
+            <img src="images/hero.jpg" alt="cooking at home">
+        </div>
         <section id="search-container">
             <section id="search-criteria">
                 <div class="ingredient-list">
@@ -60,7 +69,7 @@
         </section>
     </main>
 
-    <script src="script/base.js" defer></script>
+    <script type="module" src="script/base.js" defer></script>
 </body>
 
 </html>

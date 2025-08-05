@@ -1,3 +1,6 @@
+import { hamburger } from "./menu.js";
+
+
 const apiKey = '1d11cb62f780436ea35ab8da96e9a50f';
 let lastResults = [];
 
@@ -206,6 +209,13 @@ if (newsletterForm) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    ///////////////////////////////// Hamburger Menu /////////////////////////////  
+    hamburger({
+        buttonSelector: "#menu",
+        navSelector: ".navigation"
+    });
+
     const thankYouEmail = document.getElementById('thank-you-email');
     console.log("thankYouEmail element:", thankYouEmail); // Debug log
     if (thankYouEmail) {
