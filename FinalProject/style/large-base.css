@@ -12,7 +12,58 @@
         grid-template-columns: 1fr 1fr;
     }
 
-   
+    #header-container {
+        display: grid;
+        /* Use grid layout for larger screens */
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 1fr 1fr;
+        align-items: center;
+        position: relative;
+    }
+
+    header img {
+        grid-column: 1 / 2;
+        max-height: 100px;
+        padding: 10px;
+        max-width: 100%;
+    }
+
+    #menu {
+        display: none;
+        /* Hide the hamburger menu on larger screens */
+    }
+
+    .navigation {
+        grid-row: 2/3;
+        grid-column: 1/2;
+        display: flex;
+        flex-direction: row;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        top: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+        width: auto;
+        height: 50px;
+
+    }
+
+    .navigation a {
+        display: block;
+        /* Ensure links are visible */
+        padding: 0;
+
+        align-content: center;
+
+    }
+
+    .navigation li {
+        height: 50px;
+        align-items: center;
+        align-content: center;
+    }
+
 
 
 }

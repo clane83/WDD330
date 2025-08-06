@@ -1,3 +1,9 @@
+:root {
+    --button-color: #28a745;
+    --background-hoover-color: #218838;
+
+}
+
 html,
 body,
 header {
@@ -23,7 +29,9 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
-    /* padding: 10px; */
+    max-height: 100px;
+    overflow: hidden;
+    padding-bottom: 7px;
 }
 
 
@@ -73,9 +81,8 @@ h1 {
     align-items: center;
     font-size: medium;
     background-color: var(--nav-background-color);
-    /* position: absolute; */
-    top: 30px;
     right: 0;
+
 }
 
 
@@ -102,18 +109,14 @@ h1 {
 }
 
 .navigation a:hover {
-    color: var(--text-color);
-    background-color: var(--accent-color);
-    border-radius: 5px;
-
+    font-style: oblique;
+    font-size: large;
 
 }
 
 .navigation a.active {
-    color: var(--text-color);
-    background: var(--background-color2);
-    border-radius: 4px;
-    padding: 0.25em 0.75em;
+    font-weight: bold;
+
 }
 
 
@@ -121,6 +124,7 @@ h1 {
 
 main {
     padding: 2em;
+    padding-top: 0;
 }
 
 .hero {
@@ -163,13 +167,13 @@ button {
 }
 
 button {
-    background-color: #28a745;
+    background-color: var(--button-color);
     color: white;
     border: none;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: var(--background-hoover-color);
 }
 
 #recipe-container,
