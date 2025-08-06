@@ -209,7 +209,7 @@ if (newsletterForm) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
+    document.getElementById("currentYear").innerHTML = new Date().getFullYear();
     ///////////////////////////////// Hamburger Menu /////////////////////////////  
     hamburger({
         buttonSelector: "#menu",
