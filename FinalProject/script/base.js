@@ -17,8 +17,8 @@ if (searchButton) {
     searchButton.addEventListener('click', async () => {
 
         const ingredients = document.getElementById('ingredients').value.trim();
-        const excludeInput = document.getElementById('exclude').value.trim().toLowerCase();
-        const excludeList = excludeInput.split(',').map(item => item.trim()).filter(Boolean);
+        const excludeInput = document.getElementById('exclude');
+        const excludeList = excludeInput ? excludeInput.value.trim().toLowerCase().split(',').map(item => item.trim()).filter(Boolean) : [];
 
         if (!ingredients) return;
 
@@ -30,38 +30,74 @@ if (searchButton) {
             console.log("API response:", data);
 
             // Filter out recipes with any excluded ingredients, exclude drinks and must include at least 2 of the ingredients
-            if (excludeList.length > 0) {
-                data = data.filter(recipe => {
-                    const usesEnoughIngredients = recipe.usedIngredientCount >= 2;
-                    const isNotDrink = !recipe.title.toLowerCase().includes("drink") &&
-                        !recipe.title.toLowerCase().includes("smoothie") &&
-                        !recipe.title.toLowerCase().includes("cocktail") &&
-                        !recipe.title.toLowerCase().includes("mojito") &&
-                        !recipe.title.toLowerCase().includes("shake");
-                    return usesEnoughIngredients && isNotDrink;
+            const ingredientCount = ingredients.split(',').map(i => i.trim()).filter(Boolean).length;
+            const minIngredientCount = ingredientCount >= 2 ? 2 : 1;
+
+            data = data.filter(recipe => {
+            const usesEnoughIngredients = recipe.usedIngredientCount >= minIngredientCount;
+
+            const dishTypes = recipe.dishTypes?.map(type => type.toLowerCase()) || [];
+            const isNotDrink = !dishTypes.some(type =>
+                ["beverage", "drink", "smoothie", "shake", "cocktail"].includes(type)
+            );
+
+            const allIngredients = [...recipe.usedIngredients, ...recipe.missedIngredients].map(i =>
+                (i.originalName || i.original || i.name || "").toLowerCase()
+              );
+              
+
+            const excludesValid =
+                excludeList.length === 0 ||
+                !excludeList.some(excludeItem => {
+                    const excludeWords = excludeItem.toLowerCase().split(/\s+/);
+
+                    return allIngredients.some(ingredient => {
+                    const normalized = ingredient
+                        .toLowerCase()
+                        .replace(/[\-,]/g, ' ') // replace commas and hyphens with space
+                        .replace(/\s+/g, ' ')   // normalize spacing
+
+                    return excludeWords.every(word => normalized.includes(word));
+                    });
                 });
-            }
+
+
+              
+
+            return usesEnoughIngredients && isNotDrink && excludesValid;
+            });
+
+              
+              
 
             //cuisine cooking style filter
-            const cuisineInput = document.getElementById('cuisine').value.trim().toLowerCase();
+            const cuisineField = document.getElementById('cuisine');
+            const cuisineInput = cuisineField ? cuisineField.value.trim().toLowerCase() : "";
+
 
             if (cuisineInput) {
+
                 const filteredData = [];
 
-                for (let recipe of data) {
-                    // Get more details about the recipe to check its cuisine type
-                    const detailsUrl = `https://api.spoonacular.com/recipes/${recipe.id}/information?includeNutrition=false&apiKey=${apiKey}`;
-                    const res = await fetch(detailsUrl);
-                    const info = await res.json();
+                await Promise.all(
+                    data.map(async (recipe) => {
+                        const detailsUrl = `https://api.spoonacular.com/recipes/${recipe.id}/information?includeNutrition=false&apiKey=${apiKey}`;
+                        try {
+                            const res = await fetch(detailsUrl);
+                            const info = await res.json();
 
-                    const cuisines = (info.cuisines || []).map(c => c.toLowerCase());
-                    if (cuisines.includes(cuisineInput)) {
-                        filteredData.push(recipe);
-                    }
+                            const cuisines = (info.cuisines || []).map(c => c.toLowerCase());
+                            if (cuisines.includes(cuisineInput)) {
+                                filteredData.push(recipe);
+                            }
+                        } catch (error) {
+                            console.warn(`Failed to fetch details for recipe ${recipe.id}`, error);
+                        }
+                    })
+                );
 
-                    // Early stop if we already have a good list
-                    if (filteredData.length >= 10) break;
-                }
+                data = filteredData;
+
 
                 data = filteredData;
             }
